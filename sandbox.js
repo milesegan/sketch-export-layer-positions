@@ -141,7 +141,7 @@ var AppSandboxFileAccess = {
     // standardize the file url and remove any symlinks so that the url we lookup in bookmark data would match a url given by the askPermissionForUrl method
     var fileUrl = [[fileUrl URLByStandardizingPath] URLByResolvingSymlinksInPath];
     // lookup bookmark data for this url, this will automatically load bookmark data for a parent path if we have it
-    var bookmarkData = nil;//AppSandboxFileAccessPersist.bookmarkDataForURL(fileUrl);
+    var bookmarkData = AppSandboxFileAccessPersist.bookmarkDataForURL(fileUrl);
 
     if (bookmarkData) {
       log("Bookmark data found")
@@ -156,6 +156,8 @@ var AppSandboxFileAccess = {
     } else {
       log("No bookmark data found")
     }
+
+    allowedUrl = false; // bookmarks are broken, always ask permission
 
     // if allowed url is nil, we need to ask the user for permission
     if (!allowedUrl) {

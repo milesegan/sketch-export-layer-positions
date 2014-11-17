@@ -24,11 +24,16 @@ function processLayers(layers, layoutName) {
 function saveStringToFile(string, fileName) {
   var path = [@"" stringByAppendingString:fileName];
   var str = [@"" stringByAppendingString:string];
+  var parent = [path stringByDeletingLastPathComponent];
   function writeData() {
-    [str writeToFile:path atomically:true encoding:NSUTF8StringEncoding error:null];
+    var error = MOPointer.alloc().init();
+    [str writeToFile:path atomically:false encoding:NSUTF8StringEncoding error:error];
+    if (error.value()) {
+      log("error writing file: " + error.value());
+    }
   }
   if (in_sandbox()) {
-    sandboxAccess.accessFilePath_withBlock_persistPermission(path, writeData, true);
+    sandboxAccess.accessFilePath_withBlock_persistPermission(parent, writeData, true);
   } else {
     writeData();
   }   
