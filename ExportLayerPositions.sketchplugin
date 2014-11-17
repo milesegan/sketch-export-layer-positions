@@ -1,0 +1,42 @@
+// -*- javascript -*-
+// Sketch Layer Positions (ctrl alt command f)
+
+#import 'sandbox.js'
+#import 'sandbox-sketch-utils.js'
+
+function processLayers(layers) {
+    var lines = [];
+    log(lines);
+    for (var i = 0; i < [layers count]; ++i) {
+        var layer = [layers objectAtIndex:i];
+        var frame = [layer frame];
+        var name = '"' + [layer name] + '"';
+        var elems = [name, frame.x(), frame.y(), frame.width(), frame.height()];
+        var line = "{ " + elems.join(", ") + " }"
+        lines.push(line);
+    }
+    return lines.join(",\n");
+}
+
+function saveStringToFile(string, fileName) {
+    var path = [@"" stringByAppendingString:fileName];
+    var str = [@"" stringByAppendingString:string];
+    function writeData() {
+        [str writeToFile:path atomically:true encoding:NSUTF8StringEncoding error:null];
+    }
+    if (in_sandbox()) {
+        sandboxAccess.accessFilePath_withBlock_persistPermission(path, writeData, true);
+    } else {
+        writeData();
+    }   
+    log("saved to " + fileName);
+}
+
+var show_errors = true;
+var docPath = [[doc fileURL] path].split([doc displayName])[0];
+var docName = [doc displayName].replace(".sketch","");
+var outPath = docPath + docName + ".h";
+var layers = [[doc currentPage] layers];
+var string = processLayers(layers);
+saveStringToFile(string, outPath);
+
