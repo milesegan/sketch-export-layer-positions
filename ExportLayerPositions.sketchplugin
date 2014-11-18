@@ -42,7 +42,7 @@ function saveStringToFile(string, fileName) {
 
 var show_errors = true;
 var docPath = [[doc fileURL] path].split([doc displayName])[0];
-var docName = [doc displayName].replace(".sketch","");
+var docName = [doc displayName].replace(".sketch","_layout");
 var outPath = docPath + docName + ".h";
 var layers = [[doc currentPage] layers];
 var string = processLayers(layers, docName);
