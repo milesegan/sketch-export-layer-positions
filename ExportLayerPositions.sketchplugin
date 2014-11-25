@@ -20,7 +20,7 @@ function processLayers(layers, layoutName) {
   lines.push("static const pq_ui::fixed_layout " + layoutName + "({");
   for (var i = 0; i < layers.length; ++i) {
     var layer = layers[i];
-    var name = '"' + layer.name + '"';
+    var name = '"' + layer.name.substringFromIndex(1) + '"';
     var elems = [name, layer.x, layer.y, layer.width, layer.height];
     var line = "    { " + elems.join(", ") + " },"
     lines.push(line);
