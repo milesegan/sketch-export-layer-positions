@@ -20,7 +20,7 @@ function processLayers(layers, layoutName) {
   lines.push("static const layout_item " + layoutName + "_layout[] = {");
   for (var i = 0; i < layers.length; ++i) {
     var layer = layers[i];
-    var name = '"' + layer.name.substringFromIndex(1) + '"';
+    var name = '"' + layer.name + '"';
     var elems = [name, layer.x, layer.y, layer.width, layer.height];
     var line = "    { " + elems.join(", ") + " },"
     lines.push(line);
@@ -69,6 +69,15 @@ function walkSublayers(layer, callback, x, y) {
   }
 }
 
+function shouldExportLayer(layer) {
+  var prefixes = ["button_", "knob_", "control_"];
+  var n = layer.name;
+  for (var i = 0; i < prefixes.length; ++i) {
+    if (layer.name.hasPrefix(prefixes[i])) return true;
+  }
+  return false;
+}
+
 function main() {
   var show_errors = true;
   var docPath = [[doc fileURL] path].split([doc displayName])[0];
@@ -76,9 +85,7 @@ function main() {
   for (var i = 0; i < [artboards count]; ++i) {
     var layerList = [];
     function accumulateLayer(l) {
-      if (l.name.hasPrefix("+")) {
-        layerList.push(l);
-      }
+      if (shouldExportLayer(l)) layerList.push(l)
     }
     var layer = [artboards objectAtIndex:i];
     log([layer frame]);
