@@ -15,9 +15,9 @@ function isGroup(layer) {
 function processLayers(layers, layoutName) {
   log(layers);
   var lines = [];
-  lines.push("#include <pq_ui/layout.h>");
+  lines.push("#include <pq_ui/layout_item.h>");
   lines.push("");
-  lines.push("static const pq_ui::fixed_layout " + layoutName + "({");
+  lines.push("static const layout_item " + layoutName + "_layout[] = {");
   for (var i = 0; i < layers.length; ++i) {
     var layer = layers[i];
     var name = '"' + layer.name.substringFromIndex(1) + '"';
@@ -25,7 +25,9 @@ function processLayers(layers, layoutName) {
     var line = "    { " + elems.join(", ") + " },"
     lines.push(line);
   }
-  lines.push("});")
+  lines.push("    { NULL, 0, 0, 0, 0 }");
+  lines.push("};")
+  lines.push("");
   return lines.join("\n");
 }
 
